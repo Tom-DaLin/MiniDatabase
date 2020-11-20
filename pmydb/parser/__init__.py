@@ -73,6 +73,8 @@ class SQLParser:
 
         if action is None or 'type' not in action:
             raise Exception('Syntax Error for: %s' % statement)
+            
+
 
         action['conditions'] = {}    # conditions 条件
 
@@ -196,7 +198,8 @@ class SQLParser:
     def __create(self, statement):
         return {
             'type': 'create',
-            'database': statement[2]
+            'kind': statement[1],
+            'name': statement[2]
         }
 
     # 退出

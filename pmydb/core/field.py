@@ -6,12 +6,15 @@ from pmydb.core import FieldKey,FieldType,TYPE_MAP
 from pmydb.core import SerializedInterface
 
 class Field(SerializedInterface):
+    
     def __init__(self, data_type, keys=FieldKey.NULL, default=None):
+        '初始化：'
+        ## 对于表中的每一个字段（属性），分别有这么几个属性：数据类型、默认值、字段约束列表、数据量、
         self.__type = data_type  # 字段的数据类型
         self.__keys = keys  # 字段的数据约束  list类型
         self.__default = default  # 默认值
         self.__values = []  # 字段数据
-        self.__rows = 0  # 字段数据长度
+        self.__rows = 0  # 字段数据长度  ## 字段的记录数量
 
         # 如果约束只有一个，并且非 list 类型，则转换为 list
         if not isinstance(self.__keys, list):
@@ -39,7 +42,8 @@ class Field(SerializedInterface):
         # 如果默认值不为空并且设置了唯一约束，抛出唯一约束不能设置默认值异常
         if self.__default is not None and FieldKey.UNIQUE in self.__keys:
             raise Exception('Unique key not allow to set default value')
-
+            
+    #%% 对于增删改查，也需要对修改的数据进行检查，下面的三个函数便是为了检查
     # 判断数据类型是否符合
     def __check_type(self, value):
         # 如果该值的类型不符合定义好的类型，抛出类型错误异常
@@ -76,6 +80,9 @@ class Field(SerializedInterface):
             raise Exception('Field Not Null')
 
         return value
+    
+    
+    #%% 获取约束的一些信息
 
     # 获取有多少条数据
     def length(self):
@@ -117,6 +124,9 @@ class Field(SerializedInterface):
         # 数据长度加一
         self.__rows += 1
 
+
+    #%% 对数据表的增删改查操作
+    
     # 删除指定位置数据
     def delete(self, index):
 
@@ -144,6 +154,10 @@ class Field(SerializedInterface):
         # 修改数据
         self.__values[index] = value
 
+
+    
+    #%% 序列化和反序列化
+    
     def serialized(self):
         return SerializedInterface.json.dumps({
             'values': self.__values,

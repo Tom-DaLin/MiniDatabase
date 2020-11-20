@@ -19,6 +19,7 @@ class Database(SerializedInterface):
 
         # 追加数据表名字
         self.__table_names.append(table_name)
+        print("数据表名称为", table_name)
 
         # 新建一个数据表对象，并且与数据表名字关联绑定
         self.__table_objs[table_name] = Table(**options)

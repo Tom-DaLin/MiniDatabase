@@ -163,6 +163,7 @@ class Engine:
             raise Exception('No database choose')
 
     def insert(self,table_name,**data):
+        ## __get_table()返回table对象，用.insert()向table中插入数据
         return self.__get_table(table_name).insert(**data)
 
     # 删除指定数据表数据
@@ -178,6 +179,8 @@ class Engine:
     def create_table(self, name, **options):
         self.__check_is_choose()
         self.__current_db.create_table(name, **options)
+        print("将要创建数据表")
+        print("")
 
     # 获取数据库名
     def get_database(self, format_type='list'):
@@ -214,6 +217,7 @@ class Engine:
 
         ret = 0
         if action['type'] in self.__action_map:
+            ## 字典与函数相结合
             ret = self.__action_map[action['type']](action)
 
             if action['type'] in ['insert', 'update', 'delete', 'create', 'drop']:
@@ -269,8 +273,14 @@ class Engine:
         return self.select_db(action['database'])
     
     def __create(self, action):
-        return self.create_database(action['database'])
 
+
+        if action['kind'] == 'database':
+            return self.create_database(action['name'])
+        
+        elif action['kind'] == 'table':
+
+            return self.create_table(action['name'])
     # 执行，命令行入口接口，在此输入sql
     def run(self):
         while True:
