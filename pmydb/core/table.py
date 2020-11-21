@@ -309,7 +309,7 @@ class Table(SerializedInterface):
         self.__rows += 1
 
 
-    #%% 序列化和反序列化
+    ### 序列化和反序列化
     
     # 序列化对象
     def serialized(self):
